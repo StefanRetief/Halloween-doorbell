@@ -1,0 +1,33 @@
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+mqtt:
+  binary_sensor:
+    - unique_id: halloween_doorbell
+      name: "Halloween Doorbell"
+      state_topic: "home-assistant/halloween/doorbell"
+      availability:
+        - topic: "home-assistant/halloween/doorbell/availability"
+          payload_available: "online"
+          payload_not_available: "offline"
+      payload_on: "ON"
+      payload_off: "OFF"
+      qos: 0
+
+homekit:
+  - filter:
+      include_entities:
+        - camera.front_door_camera
+    entity_config:
+      camera.front_door_camera:
+        name: "Front Door Camera"
+        linked_motion_sensor: binary_sensor.front_door_camera_motion
+        linked_doorbell_sensor: binary_sensor.halloween_doorbell
